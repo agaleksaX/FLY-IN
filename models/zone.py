@@ -1,7 +1,12 @@
+from __future__ import annotations
+
 from dataclasses import dataclass, field
 from enum import Enum
-from models.connection import Connection
-from models.drone import Drone
+from typing import TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from models.connection import Connection
+    from models.drone import Drone
 
 
 class ZoneType(Enum):
@@ -11,7 +16,7 @@ class ZoneType(Enum):
     RESTRICTED = "restricted"
 
 
-@dataclass
+@dataclass(eq=False)
 class Zone:
     name: str
     x: int
@@ -30,6 +35,8 @@ class Zone:
 
     def add_drone(self, drone: Drone) -> None:
         """Place a drone into the zone."""
+        if drone in self.occupants:
+            return
         if self.is_full():
             raise ValueError(f"Zone '{self.name}' is full.")
         self.occupants.append(drone)
@@ -37,7 +44,7 @@ class Zone:
     def remove_drone(self, drone: Drone) -> None:
         """Remove a drone from the zone."""
         if drone not in self.occupants:
-            raise ValueError("")
+            raise ValueError(f"Drone {drone.id} is not in zone '{self.name}'.")
         self.occupants.remove(drone)
 
     def is_full(self) -> bool:
@@ -50,16 +57,23 @@ class Zone:
 
     def movement_cost(self) -> int:
         """Return the movement cost of entering this zone."""
-        if self.zone_type == ZoneType.NORMAL or self.zone_type == ZoneType.PRIORITY:
+        if self.zone_type in (ZoneType.NORMAL, ZoneType.PRIORITY):
             return 1
-        elif self.zone_type == ZoneType.RESTRICTED:
+        if self.zone_type == ZoneType.RESTRICTED:
             return 2
-        elif self.zone_type == ZoneType.BLOCKED:
-            raise ValueError("Blocked zones cannot be entered.")
+        raise ValueError("Blocked zones cannot be entered.")
 
     def degree(self) -> int:
         """Return the number of connected edges."""
         return len(self.connections)
+
+    def __eq__(self, other: object) -> bool:
+        if not isinstance(other, Zone):
+            return NotImplemented
+        return self.name == other.name
+
+    def __hash__(self) -> int:
+        return hash(self.name)
 
     def __str__(self) -> str:
         return self.name
