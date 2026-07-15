@@ -1,18 +1,22 @@
 class FlyInError(Exception):
-    """Base exception for Fly-in."""
+    """Base class for all project-specific exceptions."""
 
 
 class ParserError(FlyInError):
-    """Input parsing error."""
+    """Raised when parsing the input file fails."""
 
 
 class ValidationError(FlyInError):
-    """Input validation error."""
+    """Raised when parsed data is semantically invalid."""
 
 
 class GraphError(FlyInError):
-    """Graph integrity error."""
+    """Raised when graph operations fail."""
+
+
+class AlgorithmError(FlyInError):
+    """Raised when a pathfinding or scheduling algorithm fails."""
 
 
 class SimulationError(FlyInError):
-    """Simulation error."""
+    """Raised when simulation rules are violated."""

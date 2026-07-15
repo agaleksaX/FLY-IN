@@ -75,4 +75,7 @@ class Graph:
         return len(self._zones)
 
     def __str__(self) -> str:
-        return f"Graph({len(self._zones)} zones, {len(self.connections())} connections)"
+        return (
+            f"Graph({len(self._zones)} zones, "
+            f"{len(self.connections())} connections)"
+            )
