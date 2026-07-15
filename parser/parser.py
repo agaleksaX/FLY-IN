@@ -1,5 +1,6 @@
 from parser.tokenizer import Token, TokenType
 from models.graph import Graph
+from models.simulation_config import SimulationConfig
 from models.zone import Zone, ZoneType
 from utils.exceptions import ParserError
 from models.connection import Connection
@@ -14,7 +15,7 @@ class Parser:
         self._end: Zone | None = None
         self._nb_drones: int = 0
     
-    def parse(self, tokens: list[Token]) -> Graph:
+    def parse(self, tokens: list[Token]) -> SimulationConfig:
         """Build a graph from tokens."""
         
         for token in tokens:
@@ -45,13 +46,16 @@ class Parser:
             raise ParserError("End hub is missing.")
         
         if self._nb_drones <= 0:
-            raise ParserError("Nb_drones is invalid.")
+            raise ParserError("Number of drones is missing or invalid.")
         
         graph = Graph(zones=self._zones, start=self._start, end=self._end)
         
         graph.validate_connectivity()
         
-        return graph
+        return SimulationConfig(
+            graph=graph,
+            nb_drones=self._nb_drones,
+        )
         
     def _create_zone(self, token: Token) -> Zone:
         """Create a Zone from a token."""
