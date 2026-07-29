@@ -1,7 +1,5 @@
 from __future__ import annotations
 
-from typing import TYPE_CHECKING
-
 from algorithms.scheduler import Scheduler
 from models.drone import Drone, DroneState
 from models.simulation_config import SimulationConfig
@@ -15,7 +13,11 @@ from utils.exceptions import SimulationError
 class Engine:
     """Orchestrates the drone simulation."""
 
-    def __init__(self, config: SimulationConfig, scheduler: Scheduler | None = None) -> None:
+    def __init__(
+        self,
+        config: SimulationConfig,
+        scheduler: Scheduler | None = None,
+    ) -> None:
         self._config = config
         self._scheduler = scheduler or Scheduler(config.graph)
         self._state: SimulationState | None = None
@@ -24,12 +26,18 @@ class Engine:
         """Run the full simulation and return all turns."""
         self._state = self._initialize()
         turns: list[Turn] = []
+        max_turns = 10_000
 
         while not self._is_finished():
+            if self._state is not None and self._state.current_turn > max_turns:
+                raise SimulationError(
+                    f"Simulation exceeded {max_turns} turns — possible deadlock."
+                )
             turn = self._simulate_turn()
             self._apply_turn(turn)
             turns.append(turn)
-            self._state.current_turn += 1
+            if self._state is not None:
+                self._state.current_turn += 1
 
         return turns
 
@@ -64,18 +72,27 @@ class Engine:
 
             if isinstance(destination, Zone):
                 if drone.state is DroneState.IN_TRANSIT:
-                    source_zone = self._get_transit_source(drone)
-                    if source_zone is not None:
-                        pass
+                    if drone.transit_connection is not None:
+                        drone.transit_connection.leave(drone)
                     drone.finish_transit(destination)
                 else:
                     source_zone = drone.current_zone
-                    if source_zone is not None and source_zone is not destination:
+                    if (
+                        source_zone is not None
+                        and source_zone is not destination
+                        and drone in source_zone.occupants
+                    ):
                         source_zone.remove_drone(drone)
                     drone.advance(destination)
 
-                if drone not in destination.occupants:
-                    destination.add_drone(drone)
+                try:
+                    if drone not in destination.occupants:
+                        destination.add_drone(drone)
+                except ValueError as exc:
+                    raise SimulationError(
+                        f"Turn {self._state.current_turn}: Drone {drone.id} "
+                        f"cannot enter zone '{destination.name}' — {exc}"
+                    ) from exc
 
                 if destination is self._config.graph.end and not drone.is_delivered():
                     drone.deliver()
@@ -87,14 +104,6 @@ class Engine:
                     source_zone.remove_drone(drone)
                 drone.start_transit(destination, 2)
                 destination.enter(drone)
-
-    def _get_transit_source(self, drone: Drone) -> Zone | None:
-        """Determine source zone for a drone in transit."""
-        if not drone.transit_connection or not drone.path:
-            return None
-        if drone.path_index < len(drone.path):
-            return drone.path[drone.path_index]
-        return None
 
     def _is_finished(self) -> bool:
         if self._state is None:

@@ -51,7 +51,6 @@ class Tokenizer:
 
     def _tokenize_line(self, line: str, line_number: int) -> Token:
         """Convert one line into a Token."""
-
         prefix, body = self._split_prefix(line)
 
         metadata = self._parse_metadata(body)
@@ -75,26 +74,20 @@ class Tokenizer:
     @staticmethod
     def _split_prefix(line: str) -> tuple[str, str]:
         """Split 'hub: ...' into ('hub', '...')."""
-
         prefix, body = line.split(":", 1)
-
         return prefix.strip(), body.strip()
 
     @staticmethod
     def _remove_metadata(body: str) -> str:
         """Remove metadata block from a line."""
-
         start = body.find("[")
-
         if start == -1:
             return body.strip()
-
         return body[:start].strip()
 
     @staticmethod
     def _parse_metadata(body: str) -> dict[str, str]:
         """Parse metadata block."""
-
         start = body.find("[")
         end = body.find("]")
 
@@ -102,10 +95,11 @@ class Tokenizer:
             return {}
 
         metadata: dict[str, str] = {}
-
-        content = body[start + 1:end]
+        content = body[start + 1 : end]
 
         for item in content.split():
+            if "=" not in item:
+                continue
             key, value = item.split("=", 1)
             metadata[key] = value
 
