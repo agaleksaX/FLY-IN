@@ -10,6 +10,8 @@ if TYPE_CHECKING:
 
 @dataclass
 class Path:
+    """A sequence of zones and the connetions between them."""
+    
     zones: list[Zone] = field(default_factory=list)
     connections: list[Connection] = field(default_factory=list)
 
@@ -24,6 +26,12 @@ class Path:
     def total_cost(self) -> int:
         """Return the total movement cost, excluding the start zone."""
         return sum(zone.movement_cost() for zone in self.zones[1:])
+    
+    def priority_count(self) -> int:
+        """Return the number of priority zones in the path."""
+        from models.zone import ZoneType
+        
+        return sum(1 for zone in self.zones[1:] if zone.zone_type == ZoneType.PRIORITY)
 
     def connection_after(self, index: int) -> Connection:
         """Return the connection from zones[index] to zones[index + 1]."""

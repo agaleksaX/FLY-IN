@@ -10,6 +10,8 @@ if TYPE_CHECKING:
 
 
 class ZoneType(Enum):
+    """Supported zone types with their movment characteristics."""
+    
     NORMAL = "normal"
     BLOCKED = "blocked"
     PRIORITY = "priority"
@@ -18,12 +20,16 @@ class ZoneType(Enum):
 
 @dataclass(eq=False)
 class Zone:
+    """A node inn the drone navigation graph."""
+    
     name: str
     x: int
     y: int
     zone_type: ZoneType = ZoneType.NORMAL
     color: str | None = None
     max_drones: int = 1
+    is_start: bool = False
+    is_end: bool = False
 
     connections: list[Connection] = field(default_factory=list)
     occupants: list[Drone] = field(default_factory=list)
@@ -49,6 +55,8 @@ class Zone:
 
     def is_full(self) -> bool:
         """Return True if the zone has reached its capacity."""
+        if self.is_start or self.is_end:
+            return False
         return len(self.occupants) >= self.max_drones
 
     def is_blocked(self) -> bool:

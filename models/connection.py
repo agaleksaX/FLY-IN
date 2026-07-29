@@ -10,6 +10,8 @@ if TYPE_CHECKING:
 
 @dataclass(eq=False)
 class Connection:
+    """ birdreactional edge between two zones."""
+    
     zone_a: Zone
     zone_b: Zone
     max_link_capacity: int = 1

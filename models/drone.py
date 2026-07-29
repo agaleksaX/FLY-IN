@@ -10,6 +10,8 @@ if TYPE_CHECKING:
 
 
 class DroneState(Enum):
+    """Possible states for a drone during simulation."""
+    
     WAITING = "waiting"
     IN_TRANSIT = "in_transit"
     DELIVERED = "delivered"
@@ -17,6 +19,8 @@ class DroneState(Enum):
 
 @dataclass(eq=False)
 class Drone:
+    """Represennts a single drone in the simulation."""
+    
     id: int
     current_zone: Zone | None
 

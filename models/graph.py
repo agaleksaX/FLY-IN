@@ -45,11 +45,7 @@ class Graph:
         return result
 
     def validate_connectivity(self) -> None:
-        """Ensure end is reachable from start, ignoring blocked zones.
-
-        Raises:
-            GraphError: if no path exists between start and end.
-        """
+        """Ensure end is reachable from start, ignoring blocked zones."""
         if self.start.is_blocked() or self.end.is_blocked():
             raise GraphError("Start or end zone cannot be blocked.")
 
