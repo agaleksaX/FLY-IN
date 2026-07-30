@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING
 
-from visualization.colors import colorize, RESET, BOLD
+from visualization.colors import colorize
 
 if TYPE_CHECKING:
     from simulation.turn import Turn
@@ -10,18 +10,17 @@ if TYPE_CHECKING:
     from models.graph import Graph
 
 
-
 def print_simulation_header(config: SimulationConfig) -> None:
     """Print a colorful header before simulation starts."""
     print()
     print("=" * 50)
-    print(colorize(" FLY-IN DRONE SIMULATION", "cyan"))
-    print(f" Drones: {config.nb_drones}")
-    print(f" Start:  {config.graph.start.name}")
-    print(f" End:    {config.graph.end.name}")
+    print(colorize("  FLY-IN DRONE SIMULATION", "cyan"))
+    print(f"  Drones: {config.nb_drones}")
+    print(f"  Start:  {config.graph.start.name}")
+    print(f"  End:    {config.graph.end.name}")
     print("=" * 50)
     print()
-    
+
 
 def print_turn(turn_number: int, turn: Turn, graph: Graph) -> None:
     """Print a single simulation turn with colored output."""
@@ -62,6 +61,7 @@ def print_zone_status(graph: Graph) -> None:
         occupant_str = ", ".join(str(d) for d in zone.occupants) or "empty"
         color = zone.color or "white"
         print(
-            f"  {colorize(zone.name, color):20s} [{len(zone.occupants)}/{zone.max_drones}] {occupant_str}"
+            f"  {colorize(zone.name, color):20s} "
+            f"[{len(zone.occupants)}/{zone.max_drones}] {occupant_str}"
         )
     print()

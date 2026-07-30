@@ -102,7 +102,8 @@ class Engine:
                 source_zone = drone.current_zone
                 if source_zone is not None and drone in source_zone.occupants:
                     source_zone.remove_drone(drone)
-                drone.start_transit(destination, 2)
+                # ИСПРАВЛЕНО: 1 вместо 2 (restricted = 2 хода total: 1 на connection, 1 прибытие)
+                drone.start_transit(destination, 1)
                 destination.enter(drone)
 
     def _is_finished(self) -> bool:

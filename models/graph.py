@@ -74,4 +74,4 @@ class Graph:
         return (
             f"Graph({len(self._zones)} zones, "
             f"{len(self.connections())} connections)"
-            )
+        )

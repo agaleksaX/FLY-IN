@@ -10,8 +10,8 @@ if TYPE_CHECKING:
 
 @dataclass(eq=False)
 class Connection:
-    """ birdreactional edge between two zones."""
-    
+    """A bidirectional edge between two zones."""
+
     zone_a: Zone
     zone_b: Zone
     max_link_capacity: int = 1
@@ -24,8 +24,7 @@ class Connection:
             return self.zone_b
         if zone is self.zone_b:
             return self.zone_a
-        raise ValueError(f"Zone '{zone.name}' is not part of "
-                         f"connection '{self}'.")
+        raise ValueError(f"Zone '{zone.name}' is not part of connection '{self}'.")
 
     def connects(self, zone: Zone) -> bool:
         """Check if this connection connects to the given zone."""

@@ -1,9 +1,10 @@
-PYTHON := python
-
 .PHONY: install run debug clean lint lint-strict
 
+PYTHON := python3
+PIP := pip3
+
 install:
-	pip install -r requirements.txt
+	$(PIP) install -r requirements.txt
 
 run:
 	$(PYTHON) main.py $(MAP) $(FLAGS)

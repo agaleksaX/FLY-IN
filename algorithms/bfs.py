@@ -3,19 +3,17 @@ from __future__ import annotations
 from collections import deque
 from typing import TYPE_CHECKING
 
+from models.path import Path
 from utils.exceptions import AlgorithmError
 
 if TYPE_CHECKING:
     from models.graph import Graph
     from models.zone import Zone
-    from models.path import Path
     from models.connection import Connection
 
 
 def bfs(graph: Graph, start: Zone, end: Zone) -> Path:
     """Find shortest path (by hop count) using Breadth-First Search."""
-    from models.path import Path
-
     queue: deque[tuple[Zone, list[Zone], list[Connection]]] = deque()
     queue.append((start, [start], []))
     visited: set[str] = {start.name}
@@ -23,7 +21,7 @@ def bfs(graph: Graph, start: Zone, end: Zone) -> Path:
     while queue:
         current, zones, connections = queue.popleft()
         if current is end:
-            return Path(zones, connections)
+            return Path(zones=zones, connections=connections)
 
         for neighbor, connection in graph.neighbors(current):
             if neighbor.is_blocked():

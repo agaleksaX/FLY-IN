@@ -10,8 +10,8 @@ if TYPE_CHECKING:
 
 
 class ZoneType(Enum):
-    """Supported zone types with their movment characteristics."""
-    
+    """Supported zone types with their movement characteristics."""
+
     NORMAL = "normal"
     BLOCKED = "blocked"
     PRIORITY = "priority"
@@ -20,8 +20,8 @@ class ZoneType(Enum):
 
 @dataclass(eq=False)
 class Zone:
-    """A node inn the drone navigation graph."""
-    
+    """A node in the drone navigation graph."""
+
     name: str
     x: int
     y: int

@@ -11,7 +11,7 @@ if TYPE_CHECKING:
 
 class DroneState(Enum):
     """Possible states for a drone during simulation."""
-    
+
     WAITING = "waiting"
     IN_TRANSIT = "in_transit"
     DELIVERED = "delivered"
@@ -19,8 +19,8 @@ class DroneState(Enum):
 
 @dataclass(eq=False)
 class Drone:
-    """Represennts a single drone in the simulation."""
-    
+    """Represents a single drone in the simulation."""
+
     id: int
     current_zone: Zone | None
 
@@ -69,6 +69,12 @@ class Drone:
     def is_delivered(self) -> bool:
         """Return True if the drone has reached the end zone."""
         return self.state == DroneState.DELIVERED
+
+    def remaining_path_cost(self) -> int:
+        """Calculate the sum of movement costs for the remaining path."""
+        if self.path_index >= len(self.path):
+            return 0
+        return sum(zone.movement_cost() for zone in self.path[self.path_index + 1 :])
 
     def __eq__(self, other: object) -> bool:
         if not isinstance(other, Drone):

@@ -46,16 +46,12 @@ class Parser:
         graph = Graph(zones=self._zones, start=self._start, end=self._end)
         graph.validate_connectivity()
 
-        return SimulationConfig(
-            graph=graph,
-            nb_drones=self._nb_drones,
-        )
+        return SimulationConfig(graph=graph, nb_drones=self._nb_drones)
 
     def _create_zone(
         self, token: Token, is_start: bool = False, is_end: bool = False
     ) -> Zone:
         """Create a Zone from a token."""
-
         if len(token.values) != 3:
             raise ParserError(f"Line {token.line}: Invalid zone definition.")
 
@@ -68,7 +64,6 @@ class Parser:
             ) from None
 
         zone_type_str = token.metadata.get("zone", "normal")
-
         try:
             zone_type = ZoneType(zone_type_str)
         except ValueError:
@@ -116,7 +111,7 @@ class Parser:
         """Parse the end hub."""
         if self._end is not None:
             raise ParserError(f"Line {token.line}: Multiple end hubs defined.")
-        zone = self._create_zone(token)
+        zone = self._create_zone(token, is_end=True)
         if zone.name in self._zones:
             raise ParserError(f"Line {token.line}: Duplicate zone '{zone.name}'.")
         self._zones[zone.name] = zone
@@ -157,6 +152,7 @@ class Parser:
                 raise ParserError(f"Line {token.line}: Unknown zone '{zone1_name}'.")
             if zone2_name not in self._zones:
                 raise ParserError(f"Line {token.line}: Unknown zone '{zone2_name}'.")
+
             try:
                 max_capacity = int(token.metadata.get("max_link_capacity", "1"))
             except ValueError:

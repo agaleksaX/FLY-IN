@@ -40,36 +40,36 @@ def main(argv: list[str] | None = None) -> int:
         help="Show a matplotlib snapshot after each turn (implies --visual)",
     )
     args = parser.parse_args(argv)
-    
+
     map_path = Path(args.map_file)
     if not map_path.exists():
-        print(f"Error: File '{map_path}' not found".)
+        print(f"Error: File '{map_path}' not found.")
         return 1
-    
+
     try:
         text = map_path.read_text(encoding="utf-8")
     except Exception as exc:
         print(f"Error reading file: {exc}")
         return 1
-    
+
     tokenizer = Tokenizer()
     tokens = tokenizer.tokenize(text)
-    
+
     validator = Validator()
     validator.validate(tokens)
-    
+
     parser_obj = Parser()
     config = parser_obj.parse(tokens)
-    
+
     engine = Engine(config)
     print_simulation_header(config)
     turns = engine.run()
-    
+
     for i, turn in enumerate(turns, start=1):
         print_turn(i, turn, config.graph)
-        
+
     print_simulation_summary(len(turns), config)
-    
+
     if args.visual or args.snapshot:
         try:
             import matplotlib.pyplot as plt
@@ -79,20 +79,19 @@ def main(argv: list[str] | None = None) -> int:
             )
         except ImportError:
             print(
-                "Warning: matplotlib not innstalled. "
-                "Install with: piop install matplotlib"
+                "Warning: matplotlib not installed. "
+                "Install with: pip install matplotlib"
             )
             return 0
-        
+
         plt.close("all")
-        
+
         if args.snapshot:
             for i, turn in enumerate(turns, start=1):
-                draw_turn_snapshot(config.graph, turns, config)
-        
+                draw_turn_snapshot(config.graph, turn, i, config)
         elif args.visual:
             animate_simulation(config.graph, turns, config)
-            
+
     return 0
 
 

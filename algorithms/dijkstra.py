@@ -3,23 +3,17 @@ from __future__ import annotations
 import heapq
 from typing import TYPE_CHECKING
 
+from models.path import Path
 from utils.exceptions import AlgorithmError
 
 if TYPE_CHECKING:
     from models.graph import Graph
     from models.zone import Zone
-    from models.path import Path
     from models.connection import Connection
 
 
 def dijkstra(graph: Graph, start: Zone, end: Zone) -> Path:
-    """Find shortest path from start to end using Dijkstra's algorithm.
-
-    Priority zones are preferred when costs are equal by using a slightly
-    lower effective weight (0.99 vs 1.0) so they rank higher.
-    """
-    from models.path import Path
-
+    """Find shortest path from start to end using Dijkstra's algorithm."""
     counter = 0
     pq: list[tuple[float, int, int, int, str, list[Zone], list[Connection]]] = [
         (0.0, 0, 0, counter, start.name, [start], [])
