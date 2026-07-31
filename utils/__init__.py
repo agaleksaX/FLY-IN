@@ -1,1 +1,0 @@
-"""Utilities package for Fly-In drone simulation."""

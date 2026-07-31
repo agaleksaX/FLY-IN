@@ -5,6 +5,7 @@ from typing import TYPE_CHECKING
 if TYPE_CHECKING:
     from models.graph import Graph
     from simulation.turn import Turn
+    from models.simulation_config import SimulationConfig
 
 
 _COLOR_MAP: dict[str, str] = {
@@ -203,7 +204,7 @@ def draw_graph(graph: Graph, title: str = "Fly-In Map") -> None:
 def animate_simulation(
     graph: Graph,
     turns: list["Turn"],
-    config: "SimulationConfig",
+    config: SimulationConfig,
     subframes: int = 3,
 ) -> None:
     """Animate the simulation frame by frame — fast, no loop, auto-close."""
@@ -325,7 +326,7 @@ def draw_turn_snapshot(
     graph: Graph,
     turn: "Turn",
     turn_number: int,
-    config: "SimulationConfig",
+    config: SimulationConfig,
 ) -> None:
     """Draw a single turn snapshot showing drone positions."""
     import matplotlib.pyplot as plt

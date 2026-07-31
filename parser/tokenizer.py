@@ -95,7 +95,7 @@ class Tokenizer:
             return {}
 
         metadata: dict[str, str] = {}
-        content = body[start + 1 : end]
+        content = body[start + 1:end]
 
         for item in content.split():
             if "=" not in item:

@@ -74,7 +74,7 @@ class Drone:
         """Calculate the sum of movement costs for the remaining path."""
         if self.path_index >= len(self.path):
             return 0
-        return sum(zone.movement_cost() for zone in self.path[self.path_index + 1 :])
+        return sum(zone.movement_cost() for zone in self.path[self.path_index + 1:])
 
     def __eq__(self, other: object) -> bool:
         if not isinstance(other, Drone):
