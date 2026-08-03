@@ -5,12 +5,13 @@ PIP := pip3
 
 install:
 	$(PIP) install -r requirements.txt
+	pip install --upgrade pip
 
 run:
-	$(PYTHON) main.py $(MAP) $(FLAGS)
+	$(PYTHON) main.py $(MAP) $(FLAG)
 
 debug:
-	$(PYTHON) -m pdb main.py $(MAP) $(FLAGS)
+	$(PYTHON) -m pdb main.py $(MAP) $(FLAG)
 
 clean:
 	rm -rf __pycache__ .mypy_cache .pytest_cache
