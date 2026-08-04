@@ -31,7 +31,9 @@ class Path:
         """Return the number of priority zones in the path."""
         from models.zone import ZoneType
 
-        return sum(1 for zone in self.zones[1:] if zone.zone_type == ZoneType.PRIORITY)
+        return sum(
+            1 for zone in self.zones[1:] if zone.zone_type == ZoneType.PRIORITY
+        )
 
     def connection_after(self, index: int) -> Connection:
         """Return the connection from zones[index] to zones[index + 1]."""

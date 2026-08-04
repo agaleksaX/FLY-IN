@@ -18,7 +18,8 @@ class Validator:
         nb_tokens = [t for t in tokens if t.type is TokenType.NB_DRONES]
         if len(nb_tokens) != 1:
             raise ValidationError(
-                f"Expected exactly one nb_drones definition, found {len(nb_tokens)}."
+                "Expected exactly one"
+                f" nb_drones definition, found {len(nb_tokens)}."
             )
         if len(nb_tokens[0].values) != 1:
             raise ValidationError("nb_drones must have exactly one value.")
@@ -33,7 +34,9 @@ class Validator:
         """Ensure zone names are unique."""
         seen: set[str] = set()
         for token in tokens:
-            if token.type in (TokenType.START_HUB, TokenType.END_HUB, TokenType.HUB):
+            if token.type in (
+                TokenType.START_HUB, TokenType.END_HUB, TokenType.HUB
+            ):
                 if not token.values:
                     raise ValidationError(
                         f"Line {token.line}: Zone definition missing name."
@@ -49,7 +52,9 @@ class Validator:
         """Ensure connections reference defined zones."""
         zones: set[str] = set()
         for token in tokens:
-            if token.type in (TokenType.START_HUB, TokenType.END_HUB, TokenType.HUB):
+            if token.type in (
+                TokenType.START_HUB, TokenType.END_HUB, TokenType.HUB
+            ):
                 zones.add(token.values[0])
 
         for token in tokens:

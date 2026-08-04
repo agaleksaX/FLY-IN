@@ -94,16 +94,25 @@ class Parser:
         """Parse a normal zone."""
         zone = self._create_zone(token)
         if zone.name in self._zones:
-            raise ParserError(f"Line {token.line}: Duplicate zone '{zone.name}'.")
+            raise ParserError(
+                f"Line {token.line}: "
+                f"Duplicate zone '{zone.name}'."
+            )
         self._zones[zone.name] = zone
 
     def _parse_start(self, token: Token) -> None:
         """Parse the start hub."""
         if self._start is not None:
-            raise ParserError(f"Line {token.line}: Multiple start hubs defined.")
+            raise ParserError(
+                f"Line {token.line}: "
+                "Multiple start hubs defined."
+            )
         zone = self._create_zone(token, is_start=True)
         if zone.name in self._zones:
-            raise ParserError(f"Line {token.line}: Duplicate zone '{zone.name}'.")
+            raise ParserError(
+                f"Line {token.line}: "
+                f"Duplicate zone '{zone.name}'."
+            )
         self._zones[zone.name] = zone
         self._start = zone
 
@@ -113,14 +122,20 @@ class Parser:
             raise ParserError(f"Line {token.line}: Multiple end hubs defined.")
         zone = self._create_zone(token, is_end=True)
         if zone.name in self._zones:
-            raise ParserError(f"Line {token.line}: Duplicate zone '{zone.name}'.")
+            raise ParserError(
+                f"Line {token.line}: "
+                f"Duplicate zone '{zone.name}'."
+            )
         self._zones[zone.name] = zone
         self._end = zone
 
     def _parse_connection(self, token: Token) -> None:
         """Store a connection for later processing."""
         if len(token.values) != 1:
-            raise ParserError(f"Line {token.line}: Invalid connection definition.")
+            raise ParserError(
+                f"Line {token.line}: "
+                "Invalid connection definition."
+            )
         if "-" not in token.values[0]:
             raise ParserError(f"Line {token.line}: Invalid connection format.")
         self._connections.append(token)
@@ -128,9 +143,15 @@ class Parser:
     def _parse_nb_drones(self, token: Token) -> None:
         """Parse the number of drones."""
         if self._nb_drones != 0:
-            raise ParserError(f"Line {token.line}: Duplicate nb_drones definition.")
+            raise ParserError(
+                f"Line {token.line}: "
+                "Duplicate nb_drones definition."
+            )
         if len(token.values) != 1:
-            raise ParserError(f"Line {token.line}: Invalid nb_drones definition.")
+            raise ParserError(
+                f"Line {token.line}: "
+                "Invalid nb_drones definition."
+            )
         try:
             nb_drones = int(token.values[0])
         except ValueError:
@@ -138,7 +159,10 @@ class Parser:
                 f"Line {token.line}: Number of drones must be an integer."
             ) from None
         if nb_drones <= 0:
-            raise ParserError(f"Line {token.line}: Number of drones must be positive.")
+            raise ParserError(
+                f"Line {token.line}: "
+                "Number of drones must be positive."
+            )
         self._nb_drones = nb_drones
 
     def _build_connections(self) -> None:
@@ -149,12 +173,20 @@ class Parser:
             zone1_name, zone2_name = token.values[0].split("-", 1)
 
             if zone1_name not in self._zones:
-                raise ParserError(f"Line {token.line}: Unknown zone '{zone1_name}'.")
+                raise ParserError(
+                    f"Line {token.line}: "
+                    f"Unknown zone '{zone1_name}'."
+                )
             if zone2_name not in self._zones:
-                raise ParserError(f"Line {token.line}: Unknown zone '{zone2_name}'.")
+                raise ParserError(
+                    f"Line {token.line}: "
+                    f"Unknown zone '{zone2_name}'."
+                )
 
             try:
-                max_capacity = int(token.metadata.get("max_link_capacity", "1"))
+                max_capacity = int(
+                    token.metadata.get("max_link_capacity", "1")
+                )
             except ValueError:
                 raise ParserError(
                     f"Line {token.line}: Invalid max_link_capacity."

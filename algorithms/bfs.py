@@ -29,6 +29,8 @@ def bfs(graph: Graph, start: Zone, end: Zone) -> Path:
             if neighbor.name in visited:
                 continue
             visited.add(neighbor.name)
-            queue.append((neighbor, zones + [neighbor], connections + [connection]))
+            queue.append(
+                (neighbor, zones + [neighbor], connections + [connection])
+            )
 
     raise AlgorithmError(f"No path from {start.name} to {end.name}.")

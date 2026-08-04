@@ -31,7 +31,8 @@ class Engine:
         while not self._is_finished():
             if self._state is not None and self._state.current_turn > max_turns:
                 raise SimulationError(
-                    f"Simulation exceeded {max_turns} turns — possible deadlock."
+                    f"Simulation exceeded {max_turns}"
+                    " turns — possible deadlock."
                 )
             turn = self._simulate_turn()
             self._apply_turn(turn)
@@ -102,7 +103,6 @@ class Engine:
                 source_zone = drone.current_zone
                 if source_zone is not None and drone in source_zone.occupants:
                     source_zone.remove_drone(drone)
-                # ИСПРАВЛЕНО: 1 вместо 2 (restricted = 2 хода total: 1 на connection, 1 прибытие)
                 drone.start_transit(destination, 1)
                 destination.enter(drone)
 

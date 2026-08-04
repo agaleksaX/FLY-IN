@@ -100,7 +100,9 @@ def _draw_static_background(ax, graph: Graph) -> None:
                     color="#7f8c8d",
                     ha="center",
                     va="center",
-                    bbox=dict(boxstyle="round,pad=0.15", facecolor="white", alpha=0.7),
+                    bbox=dict(
+                        boxstyle="round,pad=0.15", facecolor="white", alpha=0.7
+                    ),
                     zorder=2,
                 )
 
@@ -184,7 +186,9 @@ def _draw_static_background(ax, graph: Graph) -> None:
             markeredgecolor="black",
         ),
     ]
-    ax.legend(handles=legend_elements, loc="upper right", fontsize=9, framealpha=0.9)
+    ax.legend(
+        handles=legend_elements, loc="upper right", fontsize=9, framealpha=0.9
+    )
 
 
 def draw_graph(graph: Graph, title: str = "Fly-In Map") -> None:
@@ -305,10 +309,10 @@ def animate_simulation(
                 txt.set_visible(False)
 
         turn_display = min(frame_idx // subframes, len(turns))
-        delivered = sum(1 for d in config.graph.end.occupants if d.is_delivered())
+        deli = sum(1 for d in config.graph.end.occupants if d.is_delivered())
         ax.set_title(
             f"Turn {turn_display}/{len(turns)}  |  "
-            f"Delivered: {delivered}/{config.nb_drones}",
+            f"Delivered: {deli}/{config.nb_drones}",
             fontsize=12,
             fontweight="bold",
         )

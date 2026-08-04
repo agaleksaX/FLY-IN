@@ -15,7 +15,9 @@ if TYPE_CHECKING:
 def dijkstra(graph: Graph, start: Zone, end: Zone) -> Path:
     """Find shortest path from start to end using Dijkstra's algorithm."""
     counter = 0
-    pq: list[tuple[float, int, int, int, str, list[Zone], list[Connection]]] = [
+    pq: list[
+        tuple[float, int, int, int, str, list[Zone], list[Connection]]
+        ] = [
         (0.0, 0, 0, counter, start.name, [start], [])
     ]
     visited: set[str] = set()

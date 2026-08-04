@@ -24,7 +24,10 @@ class Connection:
             return self.zone_b
         if zone is self.zone_b:
             return self.zone_a
-        raise ValueError(f"Zone '{zone.name}' is not part of connection '{self}'.")
+        raise ValueError(
+            f"Zone '{zone.name}' "
+            f"is not part of connection '{self}'."
+        )
 
     def connects(self, zone: Zone) -> bool:
         """Check if this connection connects to the given zone."""
