@@ -64,10 +64,13 @@ class Scheduler:
         return drone.transit_connection.zone_b
 
     def _count_outgoing(self, zone: Zone, state: SimulationState) -> int:
-        """Count drones currently in zone that are waiting and have a next zone."""
+        """Count waiting drones with a next zone."""
         count = 0
         for drone in zone.occupants:
-            if drone.state is DroneState.WAITING and drone.next_zone() is not None:
+            if (
+                drone.state is DroneState.WAITING
+                and drone.next_zone() is not None
+            ):
                 count += 1
         return count
 
@@ -92,7 +95,10 @@ class Scheduler:
             if needs_new_path:
                 try:
                     avoid: set[str] = set()
-                    if self._stuck_turns.get(drone.id, 0) > 2 and drone.next_zone():
+                    if (
+                        self._stuck_turns.get(drone.id, 0) > 2
+                        and drone.next_zone()
+                    ):
                         avoid.add(drone.next_zone().name)
 
                     path = self._find_path_avoiding(
@@ -107,7 +113,9 @@ class Scheduler:
                 if drone.path_index < len(drone.path):
                     if drone.path[drone.path_index] is not drone.current_zone:
                         try:
-                            drone.path_index = drone.path.index(drone.current_zone)
+                            drone.path_index = drone.path.index(
+                                drone.current_zone
+                            )
                         except ValueError:
                             try:
                                 path = self._path_selector.find_path(
@@ -118,7 +126,12 @@ class Scheduler:
                             except AlgorithmError:
                                 pass
 
-    def _find_path_avoiding(self, start: Zone, end: Zone, avoid: set[str]) -> Path:
+    def _find_path_avoiding(
+        self,
+        start: Zone,
+        end: Zone,
+        avoid: set[str]
+    ) -> Path:
         """Find path avoiding certain zone names."""
         from algorithms.dijkstra import dijkstra
         from algorithms.bfs import bfs
@@ -174,16 +187,22 @@ class Scheduler:
 
             next_zone = drone.next_zone()
             if next_zone is None:
-                self._stuck_turns[drone.id] = self._stuck_turns.get(drone.id, 0) + 1
+                self._stuck_turns[drone.id] = (
+                    self._stuck_turns.get(drone.id, 0) + 1
+                )
                 continue
 
             connection = self._find_connection(current, next_zone, state.graph)
             if connection is None:
-                self._stuck_turns[drone.id] = self._stuck_turns.get(drone.id, 0) + 1
+                self._stuck_turns[drone.id] = (
+                    self._stuck_turns.get(drone.id, 0) + 1
+                )
                 continue
 
             if next_zone.is_blocked():
-                self._stuck_turns[drone.id] = self._stuck_turns.get(drone.id, 0) + 1
+                self._stuck_turns[drone.id] = (
+                    self._stuck_turns.get(drone.id, 0) + 1
+                )
                 continue
 
             is_end = next_zone is state.graph.end
@@ -207,12 +226,15 @@ class Scheduler:
                     )
                     dest_available = next_zone.max_drones - cur_occ
 
-            conn_available = connection.max_link_capacity - connection_usage.get(
-                connection, 0
+            conn_available = (
+                connection.max_link_capacity
+                - connection_usage.get(connection, 0)
             )
 
             if dest_available <= 0 or conn_available <= 0:
-                self._stuck_turns[drone.id] = self._stuck_turns.get(drone.id, 0) + 1
+                self._stuck_turns[drone.id] = (
+                    self._stuck_turns.get(drone.id, 0) + 1
+                )
                 continue
 
             if next_zone.movement_cost() == 2:
@@ -230,7 +252,9 @@ class Scheduler:
 
         for drone in waiting:
             if drone.id not in moved_this_turn:
-                self._stuck_turns[drone.id] = self._stuck_turns.get(drone.id, 0) + 1
+                self._stuck_turns[drone.id] = (
+                    self._stuck_turns.get(drone.id, 0) + 1
+                )
 
     def _find_connection(
         self, zone_a: Zone, zone_b: Zone, graph: Graph

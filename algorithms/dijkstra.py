@@ -23,9 +23,15 @@ def dijkstra(graph: Graph, start: Zone, end: Zone) -> Path:
     visited: set[str] = set()
 
     while pq:
-        cost, neg_prio, steps, _cnt, current_name, zones, connections = heapq.heappop(
-            pq
-        )
+        (
+            cost,
+            neg_prio,
+            steps,
+            _cnt,
+            current_name,
+            zones,
+            connections,
+            ) = heapq.heappop(pq)
 
         if current_name in visited:
             continue

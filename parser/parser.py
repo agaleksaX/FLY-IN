@@ -74,7 +74,9 @@ class Parser:
         try:
             max_drones = int(token.metadata.get("max_drones", "1"))
         except ValueError:
-            raise ParserError(f"Line {token.line}: Invalid max_drones value.") from None
+            raise ParserError(
+                f"Line {token.line}: Invalid max_drones value."
+                ) from None
 
         if is_start or is_end:
             max_drones = 999_999

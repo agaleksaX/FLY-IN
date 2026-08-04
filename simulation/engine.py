@@ -29,7 +29,10 @@ class Engine:
         max_turns = 10_000
 
         while not self._is_finished():
-            if self._state is not None and self._state.current_turn > max_turns:
+            if (
+                self._state is not None
+                and self._state.current_turn > max_turns
+            ):
                 raise SimulationError(
                     f"Simulation exceeded {max_turns}"
                     " turns — possible deadlock."
@@ -95,7 +98,10 @@ class Engine:
                         f"cannot enter zone '{destination.name}' — {exc}"
                     ) from exc
 
-                if destination is self._config.graph.end and not drone.is_delivered():
+                if (
+                    destination is self._config.graph.end
+                    and not drone.is_delivered()
+                ):
                     drone.deliver()
                     self._state.delivered += 1
 

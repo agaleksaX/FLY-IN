@@ -43,7 +43,10 @@ def print_turn(turn_number: int, turn: Turn, graph: Graph) -> None:
     print(f"Turn {turn_number:3d}: {joined}")
 
 
-def print_simulation_summary(total_turns: int, config: SimulationConfig) -> None:
+def print_simulation_summary(
+    total_turns: int,
+    config: SimulationConfig
+) -> None:
     """Print final summary after simulation completes."""
     print()
     print("=" * 50)

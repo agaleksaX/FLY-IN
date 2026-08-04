@@ -26,7 +26,9 @@ class Validator:
         try:
             val = int(nb_tokens[0].values[0])
         except ValueError:
-            raise ValidationError("nb_drones must be a positive integer.") from None
+            raise ValidationError(
+                "nb_drones must be a positive integer."
+                ) from None
         if val <= 0:
             raise ValidationError("nb_drones must be positive.")
 
