@@ -45,8 +45,6 @@ class Scheduler:
             zone_incoming[zone] = 0
 
         for drone, destination in arriving:
-            if drone.transit_connection is not None:
-                drone.transit_connection.leave(drone)
             zone_incoming[destination] += 1
             turn.moves.append(Move(drone, destination))
 
