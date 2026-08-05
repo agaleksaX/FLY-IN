@@ -6,6 +6,7 @@ if TYPE_CHECKING:
     from models.graph import Graph
     from simulation.turn import Turn
     from models.simulation_config import SimulationConfig
+    from matplotlib.text import Text
 
 
 _COLOR_MAP: dict[str, str] = {
@@ -232,7 +233,7 @@ def animate_simulation(
         linewidths=0.8,
         zorder=5,
     )
-    drone_label_objects: dict[int, any] = {}
+    drone_label_objects: dict[int, Text] = {}
 
     drone_positions: dict[int, tuple[float, float]] = {}
     for i in range(1, config.nb_drones + 1):

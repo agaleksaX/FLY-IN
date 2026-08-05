@@ -45,6 +45,8 @@ class Scheduler:
             zone_incoming[zone] = 0
 
         for drone, destination in arriving:
+            if drone.transit_connection is not None:
+                drone.transit_connection.leave(drone)
             zone_incoming[destination] += 1
             turn.moves.append(Move(drone, destination))
 
@@ -95,11 +97,11 @@ class Scheduler:
             if needs_new_path:
                 try:
                     avoid: set[str] = set()
-                    if (
-                        self._stuck_turns.get(drone.id, 0) > 2
-                        and drone.next_zone()
-                    ):
-                        avoid.add(drone.next_zone().name)
+                    if (self._stuck_turns.get(drone.id, 0) > 2):
+                        next_zone = drone.next_zone()
+
+                        if next_zone is not None:
+                            avoid.add(next_zone.name)
 
                     path = self._find_path_avoiding(
                         drone.current_zone, state.graph.end, avoid

@@ -77,7 +77,8 @@ class Engine:
             if isinstance(destination, Zone):
                 if drone.state is DroneState.IN_TRANSIT:
                     if drone.transit_connection is not None:
-                        drone.transit_connection.leave(drone)
+                        if drone.transit_connection.drone_in_transit:
+                            drone.transit_connection.leave(drone)
                     drone.finish_transit(destination)
                 else:
                     source_zone = drone.current_zone
